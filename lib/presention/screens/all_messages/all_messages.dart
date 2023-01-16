@@ -54,7 +54,7 @@ class _AllMessagesState extends State<AllMessages> {
 //   // Extract the total amount from the message
 //   RegExp totalAmountExp = new RegExp(r"Total: \$(\d+\.\d+)");
 //   match = totalAmountExp.firstMatch(message.body);
-//   String totalAmount = match.group(1);
+  String search = '';
 //   print("Total amount: $totalAmount");
 // }
   @override
@@ -104,6 +104,7 @@ class _AllMessagesState extends State<AllMessages> {
                   keyboardType: TextInputType.multiline,
                   onChange: (p) {
                     cubit.onChangeHandler(p);
+                    search = p;
                     print(p);
                   },
                 ),
@@ -160,10 +161,42 @@ class _AllMessagesState extends State<AllMessages> {
                             child: Card(
                                 child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: CustomText(
-                                  cubit.allMessages[index].body ?? ''),
+                              child: Wrap(
+                                  children: List.generate(
+                                      (cubit.allMessages[index].body ?? '')
+                                          .split(' ')
+                                          .length,
+                                      (indexWord) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 2),
+                                            child: CustomText(
+                                              (cubit.allMessages[index].body ??
+                                                      '')
+                                                  .split(' ')[indexWord],
+                                              color: search
+                                                      .toLowerCase()
+                                                      .contains((cubit
+                                                                  .allMessages[
+                                                                      index]
+                                                                  .body ??
+                                                              '')
+                                                          .split(' ')[indexWord]
+                                                          .toLowerCase())
+
+                                                  //  (cubit.allMessages[index]
+                                                  //                 .body ??
+                                                  //             '')
+                                                  //         .split(' ')[indexWord]
+                                                  //         .toLowerCase()
+                                                  //         .contains(
+                                                  //             search.toLowerCase())
+                                                  ? AppColors.secondary
+                                                  : AppColors.black,
+                                            ),
+                                          ))),
                             )),
                           ),
+                          //  CustomText(cubit.allMessages[index].body ?? ''),
                           // ListTile(
                           //   minVerticalPadding: 8,
                           //   minLeadingWidth: 4,
@@ -186,7 +219,7 @@ class _AllMessagesState extends State<AllMessages> {
                           //     ],
                           //   ),
                           // ),
-                          const Divider()
+                          Divider()
                         ],
                       ),
                     );
